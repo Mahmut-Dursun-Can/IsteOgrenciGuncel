@@ -1,0 +1,16 @@
+com\example\iste\repository\CommentRepository.class
+com\example\iste\entity\User.class
+com\example\iste\repository\AppointmentRepository.class
+com\example\iste\entity\Comment.class
+com\example\iste\service\AppointmentService.class
+com\example\iste\service\CommentService.class
+com\example\iste\controller\MainController.class
+com\example\iste\IsteApplication.class
+com\example\iste\controller\CommentController.class
+com\example\iste\entity\Appointment.class
+com\example\iste\configuration\SecurityConfig.class
+com\example\iste\service\UserService.class
+com\example\iste\repository\UserRepository.class
+com\example\iste\AdminInitializer.class
+com\example\iste\controller\SignupController.class
+com\example\iste\controller\AppointmentController.class

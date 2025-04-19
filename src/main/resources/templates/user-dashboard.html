@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İste öğrenci</title>
+    <link rel="stylesheet" type="text/css" href="user.css">
+</head>
+<body>
+<header style="display: flex; align-items: center; justify-content: space-between; background-color: #333; padding: 10px;">
+    <!-- Logo -->
+    <div class="logo" style="margin-right: 20px;">
+        <a href="/user-dashboard">
+            <img th:src="@{/logo.png}" alt="Logo" style="height: 50px;">
+        </a>
+    </div>
+    <!-- Başlık, Ortada Konumlandırma -->
+    <h1 style="color: white; flex-grow: 1; text-align: center; margin: 0;">
+        İste Öğrenci Sistemi
+    </h1>
+    <!-- Hoşgeldin Mesajı -->
+    <div style="color: white; font-size: 16px; position: absolute; left: 100px;">
+        Hoşgeldin <span th:text="${username}">User</span>
+    </div>
+    <!-- Çıkış Butonu -->
+    <form action="/logout" method="post" class="hidden-form">
+        <input type="hidden" name="_csrf" value="${_csrf.token}" />
+        <button type="submit" class="logout-btn">Çıkış</button>
+    </form>
+
+
+</header>
+
+<nav>
+    <a onclick="showContent('appointments')">Randevu</a>
+    <a onclick="showContent('star')">Değerlendir</a>
+    <a onclick="showContent('message')">Mesaj</a>
+    <a onclick="showContent('qrcode')">QR Kodu</a>
+    <a onclick="showContent('game')">Oyun</a>
+</nav>
+
+<!-- Hata mesajı -->
+<div th:if="${error}" class="alert error">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <p th:text="${error}"></p>
+</div>
+<!-- Başarı mesajı -->
+<div th:if="${success}" class="alert success">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <p th:text="${success}"></p>
+</div>
+
+<div class="content" id="appointments">
+    <form action="/appointment/create" method="post" th:object="${appointment}">
+        <label>Yemek randevu saatinizi seçin</label>
+        <!-- Zaman seçenekleri -->
+        <div id="timeSlots">
+            <div class="time-slot" onclick="selectTime('11:30')">11:30</div>
+            <div class="time-slot" onclick="selectTime('11:45')">11:45</div>
+            <div class="time-slot" onclick="selectTime('12:00')">12:00</div>
+            <div class="time-slot" onclick="selectTime('12:15')">12:15</div>
+            <div class="time-slot" onclick="selectTime('12:30')">12:30</div>
+            <div class="time-slot" onclick="selectTime('12:45')">12:45</div>
+            <div class="time-slot" onclick="selectTime('13:00')">13:00</div>
+            <div class="time-slot" onclick="selectTime('13:15')">13:15</div>
+            <div class="time-slot" onclick="selectTime('13:30')">13:30</div>
+            <div class="time-slot" onclick="selectTime('13:45')">13:45</div>
+            <div class="time-slot" onclick="selectTime('14:00')">14:00</div>
+            <div class="time-slot" onclick="selectTime('14:15')">14:15</div>
+            <div class="time-slot" onclick="selectTime('14:30')">14:30</div>
+            <div class="time-slot" onclick="selectTime('14:45')">14:45</div>
+            <div class="time-slot" onclick="selectTime('15:00')">15:00</div>
+        </div>
+        <!-- Gizli input -->
+        <input type="hidden" name="appointmentTime" id="selectedTime" required>
+        <button type="submit">Gönder</button>
+    </form>
+</div>
+
+<div id="star" class="content hidden">
+    <form id="commentForm" action="/api/comments" method="POST">
+        <textarea id="commentInput" name="content" placeholder="Yorumunuzu buraya yazın..." rows="4" cols="50"></textarea>
+        <div id="star-rating">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+        </div>
+        <input type="hidden" id="starValue" name="stars" value="0">
+        <br><br>
+        <button type="submit">Yorumu Gönder</button>
+    </form>
+</div>
+
+<div id="message" class="content hidden">
+    <table>
+        <thead>
+        <tr>
+            <th>Kullanıcı Adı</th>
+            <th>E-posta</th>
+            <th>Mesajlaşma</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+            <td>
+                <span class="encrypt-button" th:onclick="'openMessagingPanel(' + ${user.id} + ')'">+</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="chat-box" style="display:none;">
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #f1f1f1; padding: 5px 10px; border-bottom: 1px solid #ccc;">
+        <span id="chat-username"></span>
+        <button id="backBtn" onclick="goBack()">x</button>
+    </div>
+    <div id="chat-messages" style="height:200px;overflow:auto;border:1px solid #ccc;"></div>
+    <input type="text" id="messageInput" placeholder="Mesaj yaz...">
+    <button id="sendBtn">Gönder</button>
+</div>
+
+<!-- QR Kodu bölümünde class uyumu sağlandı -->
+<div id="qrcode" class="content hidden">
+    <button id="olustur" class="generate-btn">QR Kod Oluştur</button>
+</div>
+<!-- QR Panel -->
+<div id="qrPanel">
+    <h2>QR Kodunuz:</h2>
+    <div id="qrcode-box"></div>
+    <button onclick="kapatPanel()" class="close-btn">Kapat</button>
+</div>
+
+<div id="game" class="content hidden">
+<button id="joinButton">Katıl</button>
+    <canvas id="drawingCanvas" width="650" height="370" class="hidden"></canvas> <!-- bunu sakın kaldırma-->
+    <h3 id="randomWord" class="hidden">
+        Rastgele Kelime: <span id="randomWordDisplay" th:text="${randomWord}"></span>
+    </h3>
+    <input type="text" id="guessInput" class="hidden" placeholder="Tahmin yapın...">
+    <button id="guessButton" class="hidden">Tahmin Et</button>
+    <p id="resultMessage" class="hidden">Kelime girmeniz bekleniyor</p>
+</div>
+
+<footer>
+    <p>&copy;2025 İSTE Yemekhane Randevu Sistemi<span style="margin-left: 30px;"></span>Logo: <a href="https://commons.wikimedia.org/wiki/File:Iste_logo.png" target="_blank" style="color: #007bff;">İSTE Logo</a>. Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" style="color: #007bff;">CC BY-SA 4.0</a>.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+<script>
+    let currentUserId = [[${currentUserId}]];
+    let currentUsername = '[[${currentUsername}]]';
+</script>
+
+<script src="/star.js"></script>
+<script src="/appointment.js"></script>
+<script src="/game.js"></script>
+<script src="/message.js"></script>
+<script src="/qr-user.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,553 @@
+#game {
+background-color:#f4f4f4;
+
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2); /* Daha yayvan ve yumuşak gölge */
+}
+
+#resultMessage {
+    position: absolute;
+    top: 45%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-align: center;
+    width: fit-content;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9; /* Görünürlük için */
+}
+
+#randomWord {
+    font-size: 24px; /* Font büyüklüğü */
+    font-weight: bold; /* Kalın yazı */
+    color: #4CAF50; /* Yeşil renk */
+    text-align: center; /* Ortalanmış yazı */
+    margin: 20px 0; /* Üst ve alt boşluk */
+    padding: 10px; /* İç boşluk */
+    background-color: #f4f4f4; /* Arka plan rengi */
+    border-radius: 8px; /* Köşe yuvarlama */
+    border: 2px solid #4CAF50; /* Kenarlık rengi */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+    transition: all 0.3s ease-in-out; /* Yumuşak geçiş efekti */
+    position: absolute;
+    top: 150px; /* Sayfanın 50px aşağısına yerleştir */
+    left: 60%;
+    transform: translateX(-50%); /* Yatayda ortalar */
+}
+/* Çizim alanı kapsayıcısı */
+#drawingCanvas {
+    width: 650px;
+    height: 370px;
+    background-color: #f9f9f9;       /* Açık gri arka plan */
+    border-radius: 12px;             /* Köşeleri yumuşat */
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2); /* Daha yayvan ve yumuşak gölge */
+}
+
+/* Canvas elemanı */
+canvas {
+    width: 100%;
+    height: 400px;
+    border: 2px solid rgba(0, 0, 0, 0);       /* Mavi çerçeve */
+    border-radius: 8px;              /* Canvas köşelerini yumuşat */
+    display: block;
+    margin-top: 10px;
+    background-color: #f9f9f9;          /* Beyaz zemin */
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2); /* Daha yayvan ve yumuşak gölge */
+}
+
+#guessInput,
+#guessButton {
+    position: absolute; /* Konumlandırmayı absolute yap */
+    left: 50%; /* Sayfanın ortasına yerleştir */
+    transform: translateX(10%); /* Öğeleri tam ortalayacak şekilde sola kaydır */
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    width: 250px;
+}
+
+/* Aralarındaki mesafeyi artırmak için */
+#guessInput {
+    top: 400px; /* Üstten 420px aşağıya yerleştir */
+    border: 1px solid #ccc;
+}
+
+#guessButton {
+    top: 460px; /* Üstten 460px aşağıya yerleştir */
+    padding: 10px 16px;
+    border: none;
+    background-color: #3b82f6;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#guessButton:hover {
+    background-color: #2563eb;
+}
+
+
+
+.hidden {
+    display: none;
+}
+#user-dashboard {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+/* Butonun temel stili */
+#olustur {
+    background-color: #4CAF50; /* Yeşil arka plan */
+    color: white; /* Beyaz metin */
+    border: none; /* Kenarlık yok */
+    padding: 10px 20px; /* İçerik etrafında boşluk */
+    text-align: center; /* Metni ortala */
+    text-decoration: none; /* Alt çizgi yok */
+    display: inline-block; /* Yan yana görünmesini sağlar */
+    font-size: 16px; /* Font büyüklüğü */
+    cursor: pointer; /* Fareyle üzerine gelindiğinde işaretçi değişir */
+    border-radius: 5px; /* Yuvarlatılmış köşeler */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Hafif gölge */
+    transition: background-color 0.3s, transform 0.3s; /* Hover efekti */
+    width: auto; /* Butonun genişliği içeriğine göre otomatik ayarlanır */
+    margin: 0 auto; /* Butonu ortalamak için */
+    margin-top: 50px; /* Butonu biraz aşağıya kaydırır */
+}
+
+#olustur:hover {
+    background-color: #45a049; /* Hoverda daha koyu yeşil */
+    transform: translateY(-2px); /* Butonun yukarı kayması */
+}
+
+#olustur:active {
+    transform: translateY(0); /* Tıklanınca buton normal pozisyona döner */
+}
+
+/* Butonun bulunduğu bölüm için */
+.generate-btn {
+    font-family: 'Arial', sans-serif; /* Yazı fontu */
+}
+
+/* QR Panel */
+#qrPanel {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    text-align: center;
+}
+
+/* QR Görseli */
+#qrPanel img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* QR Oluştur Butonu */
+.generate-btn {
+    padding: 12px 24px;
+    font-size: 18px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+/* Paneli Kapat Butonu */
+.close-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Chat kutusu ve ilgili elementler */
+#chat-box {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    width: 350px;
+    max-height: 500px;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+#backBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 3px 6px;
+    background-color: #FF0000;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-size: 15px;
+    line-height: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    text-decoration: none;
+    color: #333;
+}
+
+#backBtn:hover {
+    background-color: #D20000;
+}
+
+#chat-messages {
+    flex-grow: 1;
+    background-color: #ffffff;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.chat-input-area {
+    display: flex;
+    align-items: center;
+}
+
+#messageInput {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+#sendBtn {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+#sendBtn:hover {
+    background-color: #0056b3;
+}
+
+/* Kullanıcı listesi */
+#user-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#user-list li {
+    margin: 5px 0;
+    padding: 8px;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.hidden-form {
+    background-color: #333;
+    box-shadow: none;
+    border: none;
+}
+
+button.logout-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: white;
+    background-color: #e74c3c;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: auto;
+    box-shadow: none;
+}
+
+button.logout-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Yıldız yorum sistemi */
+.star {
+    font-size: 30px;
+    cursor: pointer;
+    color: gray;
+    transition: color 0.3s ease;
+}
+
+.star:hover {
+    color: gold;
+}
+
+#star-rating {
+    margin-bottom: 20px;
+}
+
+/* Alert mesajları */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 500px;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+nav {
+    background-color: #ecf0f1;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+nav a {
+    color: #2c3e50;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+nav a:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Hata ve başarı mesajları */
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.closebtn {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    font-size: 25px;
+    font-weight: bold;
+    color: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.closebtn:hover {
+    color: #721c24;
+    transform: translateY(-50%) scale(1.2);
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+header .logo {
+    display: flex;
+    align-items: center;
+}
+
+header .logo img {
+    height: 50px;
+    margin-right: 10px;
+}
+
+header h1 {
+    margin: 0;
+    text-align: center;
+    flex-grow: 1;
+}
+
+.content {
+    margin: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 80%;
+    max-width: 100%;
+    table-layout: fixed;
+    box-sizing: border-box;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    box-sizing: border-box;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 4px;
+    text-align: left;
+    font-weight: bold;
+}
+
+td {
+    padding: 10px 4px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+.encrypt-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.encrypt-button:hover {
+    background-color: #45a049;
+}
+
+.encrypt-button:focus {
+    outline: none;
+}
+
+.content table {
+    margin-top: 20px;
+}
+
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    margin: 0 auto;
+    user-select: none;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.time-slot {
+    display: inline-block;
+    margin: 10px;
+    padding: 15px;
+    background-color: #f2f2f2;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    width: 80px;
+    user-select: none;
+}
+
+.time-slot:hover {
+    background-color: #ddd;
+}
+
+.selected {
+    background-color: #4CAF50;
+    color: white;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 5px 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+
+
+@media (max-width: 768px) {
+    .time-slot {
+        width: 60px;
+        padding: 10px;
+    }
+    form {
+        width: 100%;
+    }
+}

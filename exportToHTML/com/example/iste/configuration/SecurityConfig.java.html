@@ -1,0 +1,72 @@
+<html>
+<head>
+<title>SecurityConfig.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+SecurityConfig.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">iste</span><span class="s2">.</span><span class="s1">configuration</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">org</span><span class="s2">.</span><span class="s1">springframework</span><span class="s2">.</span><span class="s1">context</span><span class="s2">.</span><span class="s1">annotation</span><span class="s2">.</span><span class="s1">Bean</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">org</span><span class="s2">.</span><span class="s1">springframework</span><span class="s2">.</span><span class="s1">context</span><span class="s2">.</span><span class="s1">annotation</span><span class="s2">.</span><span class="s1">Configuration</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">org</span><span class="s2">.</span><span class="s1">springframework</span><span class="s2">.</span><span class="s1">security</span><span class="s2">.</span><span class="s1">config</span><span class="s2">.</span><span class="s1">annotation</span><span class="s2">.</span><span class="s1">web</span><span class="s2">.</span><span class="s1">builders</span><span class="s2">.</span><span class="s1">HttpSecurity</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">org</span><span class="s2">.</span><span class="s1">springframework</span><span class="s2">.</span><span class="s1">security</span><span class="s2">.</span><span class="s1">config</span><span class="s2">.</span><span class="s1">annotation</span><span class="s2">.</span><span class="s1">web</span><span class="s2">.</span><span class="s1">configuration</span><span class="s2">.</span><span class="s1">EnableWebSecurity</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">org</span><span class="s2">.</span><span class="s1">springframework</span><span class="s2">.</span><span class="s1">security</span><span class="s2">.</span><span class="s1">crypto</span><span class="s2">.</span><span class="s1">bcrypt</span><span class="s2">.</span><span class="s1">BCryptPasswordEncoder</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">org</span><span class="s2">.</span><span class="s1">springframework</span><span class="s2">.</span><span class="s1">security</span><span class="s2">.</span><span class="s1">web</span><span class="s2">.</span><span class="s1">SecurityFilterChain</span><span class="s2">;</span>
+
+<span class="s1">@Configuration</span>
+<span class="s1">@EnableWebSecurity</span>
+<span class="s0">public class </span><span class="s1">SecurityConfig </span><span class="s2">{</span>
+
+    <span class="s1">@Bean</span>
+    <span class="s0">public </span><span class="s1">SecurityFilterChain securityFilterChain</span><span class="s2">(</span><span class="s1">HttpSecurity http</span><span class="s2">) </span><span class="s0">throws </span><span class="s1">Exception </span><span class="s2">{</span>
+        <span class="s1">http</span>
+                <span class="s2">.</span><span class="s1">authorizeHttpRequests</span><span class="s2">(</span><span class="s1">authz -&gt; authz</span>
+                        <span class="s2">.</span><span class="s1">requestMatchers</span><span class="s2">(</span><span class="s3">&quot;/admin-dashboard&quot;</span><span class="s2">).</span><span class="s1">hasRole</span><span class="s2">(</span><span class="s3">&quot;ADMIN&quot;</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">requestMatchers</span><span class="s2">(</span><span class="s3">&quot;/user-dashboard&quot;</span><span class="s2">).</span><span class="s1">hasRole</span><span class="s2">(</span><span class="s3">&quot;USER&quot;</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">requestMatchers</span><span class="s2">(</span><span class="s3">&quot;/login-user&quot;</span><span class="s2">,</span><span class="s3">&quot;/admin-dashboard&quot;</span><span class="s2">,</span><span class="s3">&quot;/user-dashboard&quot;</span><span class="s2">, </span><span class="s3">&quot;/login-admin&quot;</span><span class="s2">, </span><span class="s3">&quot;/signup&quot;</span><span class="s2">, </span><span class="s3">&quot;/public&quot;</span><span class="s2">).</span><span class="s1">permitAll</span><span class="s2">()</span>
+                        <span class="s2">.</span><span class="s1">anyRequest</span><span class="s2">().</span><span class="s1">authenticated</span><span class="s2">()</span>
+                <span class="s2">)</span>
+                <span class="s2">.</span><span class="s1">formLogin</span><span class="s2">(</span><span class="s1">login -&gt; login</span>
+                        <span class="s2">.</span><span class="s1">loginPage</span><span class="s2">(</span><span class="s3">&quot;/login-user&quot;</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">defaultSuccessUrl</span><span class="s2">(</span><span class="s3">&quot;/user-dashboard&quot;</span><span class="s2">, </span><span class="s0">true</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">usernameParameter</span><span class="s2">(</span><span class="s3">&quot;email&quot;</span><span class="s2">) </span><span class="s4">// Kullanıcı adı olarak email kullanılıyor</span>
+                        <span class="s2">.</span><span class="s1">passwordParameter</span><span class="s2">(</span><span class="s3">&quot;password&quot;</span><span class="s2">) </span><span class="s4">// Şifre alanı</span>
+                        <span class="s2">.</span><span class="s1">failureUrl</span><span class="s2">(</span><span class="s3">&quot;/login-user?error=true&quot;</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">permitAll</span><span class="s2">()</span>
+                <span class="s2">)</span>
+                <span class="s2">.</span><span class="s1">formLogin</span><span class="s2">(</span><span class="s1">login -&gt; login</span>
+                        <span class="s2">.</span><span class="s1">loginPage</span><span class="s2">(</span><span class="s3">&quot;/login-admin&quot;</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">usernameParameter</span><span class="s2">(</span><span class="s3">&quot;email&quot;</span><span class="s2">) </span><span class="s4">// Kullanıcı adı olarak email kullanılıyor</span>
+                        <span class="s2">.</span><span class="s1">passwordParameter</span><span class="s2">(</span><span class="s3">&quot;password&quot;</span><span class="s2">) </span><span class="s4">// Şifre alanı</span>
+                        <span class="s2">.</span><span class="s1">defaultSuccessUrl</span><span class="s2">(</span><span class="s3">&quot;/admin-dashboard&quot;</span><span class="s2">, </span><span class="s0">true</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">failureUrl</span><span class="s2">(</span><span class="s3">&quot;/login-admin?error=true&quot;</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">permitAll</span><span class="s2">()</span>
+                <span class="s2">)</span>
+                <span class="s2">.</span><span class="s1">logout</span><span class="s2">(</span><span class="s1">logout -&gt; logout</span>
+                        <span class="s2">.</span><span class="s1">logoutSuccessUrl</span><span class="s2">(</span><span class="s3">&quot;/login?logout=true&quot;</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">permitAll</span><span class="s2">()</span>
+                <span class="s2">);</span>
+        <span class="s0">return </span><span class="s1">http</span><span class="s2">.</span><span class="s1">build</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+
+    <span class="s1">@Bean</span>
+    <span class="s0">public </span><span class="s1">BCryptPasswordEncoder bCryptPasswordEncoder</span><span class="s2">() {</span>
+        <span class="s0">return new </span><span class="s1">BCryptPasswordEncoder</span><span class="s2">();</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>

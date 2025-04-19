@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yönetici Paneli</title>
+  <link rel="stylesheet" type="text/css" href="admin.css">
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script src="qr-admin.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <a href="/admin-dashboard">
+      <img th:src="@{/logo.png}" alt="Logo">
+    </a>
+  </div>
+  <h1>Yönetici Paneli</h1>
+</header>
+
+<nav>
+  <a onclick="showContent('appointments')">Randevu</a>
+  <a onclick="showContent('ratings')">Değerlendirme</a>
+  <a onclick="showContent('qr')">QR Kod</a>
+</nav>
+
+<!-- Randevu Listesi -->
+<div id="appointments" class="content">
+  <h2>Randevu Listesi</h2>
+  <table>
+    <thead>
+    <tr><th>Öğrenci Adı</th><th>Randevu Saati</th></tr>
+    </thead>
+    <tbody th:each="appointment : ${appointments}">
+    <tr>
+      <td th:text="${appointment.username}"></td>
+      <td th:text="${appointment.appointmentTime}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Değerlendirme -->
+<div id="ratings" class="content hidden">
+  <h2>Yemek Değerlendirmeleri</h2>
+  <table>
+    <thead>
+    <tr><th>Öğrenci Adı</th><th>Yıldız</th><th>Yorum</th></tr>
+    </thead>
+    <tbody th:each="comment : ${comments}">
+    <tr>
+      <td th:text="${comment.username}"></td>
+      <td th:text="${comment.stars}"></td>
+      <td th:text="${comment.content}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- QR KOD -->
+<div id="qr" class="content hidden">
+  <div id="status" class="status-message hidden"></div>
+  <h2>QR Kod Tarayıcı</h2>
+  <div class="qr-wrapper">
+    <button class="startbtn" onclick="startScanner()">QR Kod Oku</button>
+    <div id="reader"></div>
+    <button class="stopbtn" onclick="stopScanner()">QR Okumayı Durdur</button>
+  </div>
+</div>
+
+<footer>
+
+  <p>&copy;2025 İSTE Yemekhane Randevu Sistemi    <span style="margin-left: 30px;"></span>
+    Logo: <a href="https://commons.wikimedia.org/wiki/File:Iste_logo.png" target="_blank" style="color: #007bff;"> İSTE Logo</a></p>
+</footer>
+
+</body>
+</html>
