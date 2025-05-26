@@ -1,14 +1,16 @@
-# Aşama 1: Derleme aşaması
-FROM maven:3.9.2-eclipse-temurin-17-alpine AS builder
+# 1. aşama: Java backend'i derle
+FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn dependency:go-offline -B
-RUN mvn package -DskipTests -B
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Aşama 2: Çalıştırma aşaması
-FROM openjdk:17-jdk-alpine
-WORKDIR /app
-COPY --from=builder /app/target/iste-0.0.1-SNAPSHOT.jar app.jar
+# 2. aşama: Nginx ile frontend'i sun
+FROM nginx:alpine AS frontend
+COPY frontend/dist/ /usr/share/nginx/html
+
+# 3. aşama: Java jar çalıştırıcı
+FROM openjdk:21-jdk-slim
+COPY --from=build /app/target/*.jar /app/app.jar
+COPY --from=frontend /usr/share/nginx/html /static/
 EXPOSE 8080
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","/app/app.jar"]
